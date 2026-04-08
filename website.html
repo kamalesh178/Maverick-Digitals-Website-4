@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maverick Digitals — Turn Attention Into Revenue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060614;--surface:#0b0b1e;--border:#161630;
+  --text:#f0f0f8;--muted:#5a5a7a;--red:#e8202e;
+  --gold:#ffb520;--blue:#3d7eff;
+  --font:'Instrument Sans',sans-serif;
+  --display:'Syne',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;cursor:none}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 70%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 60% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 80%, #fff, transparent),
+    radial-gradient(2px 2px at 75% 40%, #fff, transparent);
+  opacity:0.6;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* CURSOR */
+#cr,#cd{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:0;left:0}
+#cr{width:38px;height:38px;border:1px solid rgba(240,240,248,.25);transition:width .3s,height .3s,border-color .3s,background .3s}
+#cd{width:6px;height:6px;background:var(--red)}
+body.link-hover #cr{width:56px;height:56px;border-color:rgba(232,32,46,.5);background:rgba(232,32,46,.08)}
+
+/* SCROLL PROGRESS */
+#sb{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,var(--red),var(--gold));z-index:1001;pointer-events:none}
+
+/* GLOBE */
+#globe{position:fixed;top:0;right:0;width:62vw;height:100vh;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.5rem 4.5rem;display:flex;align-items:center;justify-content:space-between}
+nav::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,20,.94) 0%,transparent 100%);z-index:-1}
+.logo{font-family:var(--display);font-size:1.1rem;font-weight:800;letter-spacing:.06em;color:var(--text);text-decoration:none;text-transform:uppercase}
+.logo .dot{color:var(--red)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--red);transition:width .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.55rem 1.4rem;border:1px solid var(--red);color:var(--red);text-decoration:none;transition:all .3s}
+.nav-cta:hover{background:var(--red);color:#fff}
+.nav-ham{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:0}
+.nav-ham span{width:22px;height:1px;background:var(--text);display:block;transition:all .3s}
+.nav-ham.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.nav-ham.open span:nth-child(2){opacity:0}
+.nav-ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+
+/* MOBILE MENU */
+#mm{position:fixed;inset:0;background:var(--bg);z-index:490;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;transform:translateX(100%);transition:transform .45s cubic-bezier(.77,0,.175,1)}
+#mm.open{transform:translateX(0)}
+#mm a{font-family:var(--display);font-size:2.2rem;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+#mm a:hover{color:var(--red)}
+
+/* MAIN */
+main{position:relative;z-index:10}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:0 4.5rem;padding-top:5rem;position:relative}
+.hero-inner{max-width:48%}
+.hero-tag{font-family:var(--mono);font-size:.68rem;color:var(--gold);letter-spacing:.28em;text-transform:uppercase;margin-bottom:2rem;display:flex;align-items:center;gap:.8rem;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
+.hero-tag::before{content:'';width:28px;height:1px;background:var(--gold)}
+.hero-tag.vis{opacity:1;transform:translateY(0)}
+h1.htitle{font-family:var(--display);font-size:clamp(3.4rem,5.8vw,7rem);font-weight:800;line-height:.97;letter-spacing:-.03em;margin-bottom:2rem}
+.htitle .hl{color:var(--red)}
+.htitle .hline{display:block;opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease}
+.htitle .hline.vis{opacity:1;transform:translateY(0)}
+.hero-desc{font-size:1rem;color:var(--muted);line-height:1.8;max-width:400px;margin-bottom:2.8rem;opacity:0;transform:translateY(20px);transition:opacity .7s .35s ease,transform .7s .35s ease}
+.hero-desc.vis{opacity:1;transform:translateY(0)}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;transform:translateY(20px);transition:opacity .7s .45s ease,transform .7s .45s ease}
+.hero-btns.vis{opacity:1;transform:translateY(0)}
+.btn-fill{padding:.85rem 2rem;background:var(--red);color:#fff;text-decoration:none;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;display:inline-block}
+.btn-fill:hover{background:#be1a26;transform:translateY(-2px)}
+.btn-ghost{padding:.85rem 2rem;border:1px solid rgba(240,240,248,.18);color:var(--text);text-decoration:none;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;display:inline-block}
+.btn-ghost:hover{border-color:rgba(240,240,248,.6);transform:translateY(-2px)}
+.hero-scroll{position:absolute;bottom:2.8rem;left:4.5rem;display:flex;align-items:center;gap:.75rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;opacity:0;transition:opacity 1s 1.2s}
+.hero-scroll.vis{opacity:1}
+.scline{width:36px;height:1px;background:var(--muted);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{width:36px;opacity:.35}50%{width:58px;opacity:.8}}
+
+/* STATS */
+#stats{display:flex;background:rgba(6,6,20,.97);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:20}
+.stat-item{flex:1;padding:2.5rem 3rem;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:var(--display);font-size:clamp(2rem,3.2vw,3.4rem);font-weight:800;line-height:1;margin-bottom:.4rem}
+.stat-num .ac{color:var(--gold)}
+.stat-lbl{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}
+
+/* SECTION SHARED */
+.gbg{background:linear-gradient(108deg,rgba(6,6,20,.97) 0%,rgba(6,6,20,.95) 42%,rgba(6,6,20,.6) 62%,rgba(6,6,20,0) 100%)}
+.sinner{padding:7rem 4.5rem;max-width:58%}
+.slabel{font-family:var(--mono);font-size:.66rem;color:var(--red);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:.75rem}
+.slabel::before{content:'';width:22px;height:1px;background:var(--red);flex-shrink:0}
+h2.sh{font-family:var(--display);font-size:clamp(2rem,3.2vw,3.8rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:2rem}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(32px);transition:opacity .75s ease,transform .75s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* ABOUT */
+#about .sinner{max-width:64%;display:grid;grid-template-columns:1.1fr 0.9fr;gap:4rem;align-items:start}
+.aheadwrap{grid-column:1/-1}
+.abody p{font-size:.95rem;color:var(--muted);line-height:1.85;margin-bottom:1.2rem}
+.ameta{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)}
+.ameta-row label{display:block;font-family:var(--mono);font-size:.6rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.3rem}
+.ameta-row span{font-size:.82rem;font-weight:500;color:var(--text)}
+.ind-title{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-bottom:1rem}
+.tagcloud{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:2.5rem}
+.tag{padding:.38rem .85rem;border:1px solid var(--border);font-size:.72rem;color:var(--muted);transition:all .3s;cursor:default}
+.tag:hover{border-color:var(--blue);color:var(--text)}
+.mission{border-left:2px solid var(--red);padding-left:1.2rem;margin-top:2rem}
+.mission p{font-size:.88rem;color:var(--muted);line-height:1.8;font-style:italic}
+
+/* SERVICES */
+#services .sinner{max-width:60%}
+.svc-list{border-top:1px solid var(--border);margin-top:-.5rem}
+.svc-row{border-bottom:1px solid var(--border);overflow:hidden}
+.svc-head{display:flex;align-items:center;padding:1.55rem 0;cursor:pointer;gap:1.5rem}
+.svc-no{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;width:26px;flex-shrink:0}
+.svc-nm{font-family:var(--display);font-size:1.05rem;font-weight:600;flex:1;transition:color .3s}
+.svc-arr{font-size:.95rem;color:var(--muted);transition:transform .35s,color .3s;font-family:var(--mono)}
+.svc-row:hover .svc-nm,.svc-row.open .svc-nm{color:var(--red)}
+.svc-row:hover .svc-arr,.svc-row.open .svc-arr{color:var(--red);transform:rotate(90deg)}
+.svc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);padding-left:44px}
+.svc-row.open .svc-body{max-height:240px}
+.svc-desc{font-size:.84rem;color:var(--muted);line-height:1.72;margin-bottom:1rem;max-width:460px}
+.svc-tags{display:flex;flex-wrap:wrap;gap:1.2rem;margin-bottom:1.4rem}
+.svc-tag{font-family:var(--mono);font-size:.6rem;color:var(--blue);letter-spacing:.05em}
+.svc-tag::before{content:'→ '}
+
+/* TEAM */
+#team .sinner{max-width:68%}
+.founders{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:4rem}
+.founder{border:1px solid var(--border);overflow:hidden;transition:border-color .4s}
+.founder:hover{border-color:rgba(61,126,255,.35)}
+.founder-img-wrap{overflow:hidden;height:310px}
+.founder-img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(25%);transition:filter .5s,transform .5s;display:block}
+.founder:hover .founder-img{filter:grayscale(0);transform:scale(1.03)}
+.founder-info{padding:1.5rem;background:rgba(11,11,30,.95)}
+.founder-name{font-family:var(--display);font-size:1.05rem;font-weight:700;margin-bottom:.2rem}
+.founder-role{font-family:var(--mono);font-size:.6rem;color:var(--red);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.8rem}
+.founder-bio{font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:1rem}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chip{padding:.2rem .65rem;background:rgba(61,126,255,.1);border:1px solid rgba(61,126,255,.2);font-family:var(--mono);font-size:.6rem;color:var(--blue);letter-spacing:.04em}
+.vals-title{font-family:var(--mono);font-size:.64rem;color:var(--muted);letter-spacing:.26em;text-transform:uppercase;margin-bottom:1.4rem;padding-top:2rem;border-top:1px solid var(--border)}
+.vals{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.val{padding:1.4rem;border:1px solid var(--border);transition:border-color .3s}
+.val:hover{border-color:rgba(232,32,46,.3)}
+.val h4{font-family:var(--display);font-size:.9rem;font-weight:600;margin-bottom:.45rem}
+.val p{font-size:.76rem;color:var(--muted);line-height:1.65}
+
+/* CONTACT */
+#contact{background:rgba(6,6,20,.98);border-top:1px solid var(--border)}
+#contact .sinner{max-width:70%;display:grid;grid-template-columns:1fr 1fr;gap:5rem}
+.ctop{grid-column:1/-1}
+.cdesc{font-size:.94rem;color:var(--muted);line-height:1.8;margin-bottom:2rem}
+.clinks{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
+.clinks a{font-size:.84rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:.75rem;transition:color .3s}
+.clinks a::before{content:'';width:6px;height:6px;background:var(--red);border-radius:50%;flex-shrink:0}
+.clinks a:hover{color:var(--red)}
+.socials{display:flex;gap:.75rem}
+.soc-btn{padding:.55rem 1.25rem;border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;transition:all .3s}
+.soc-btn:hover{border-color:var(--blue);color:var(--blue)}
+.cform{display:flex;flex-direction:column;gap:1rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fgrp{display:flex;flex-direction:column;gap:.38rem}
+.fgrp label{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
+.fgrp input,.fgrp select,.fgrp textarea{background:rgba(255,255,255,.03);border:1px solid var(--border);padding:.72rem .9rem;color:var(--text);font-family:var(--font);font-size:.84rem;outline:none;transition:border-color .3s;-webkit-appearance:none}
+.fgrp input:focus,.fgrp select:focus,.fgrp textarea:focus{border-color:var(--blue)}
+.fgrp select option{background:#0b0b1e}
+.fgrp textarea{height:108px;resize:none}
+.fsub{padding:.88rem 2.2rem;background:var(--red);color:#fff;border:none;font-family:var(--font);font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .3s;align-self:flex-start}
+.fsub:hover{background:#be1a26;transform:translateY(-2px)}
+.form-msg{font-family:var(--mono);font-size:.7rem;color:var(--gold);display:none;margin-top:.5rem}
+
+/* FOOTER */
+footer{padding:2.5rem 4.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(4,4,14,1);position:relative;z-index:20}
+.flogo{font-family:var(--display);font-size:.9rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+.flogo .dot{color:var(--red)}
+.fnav{display:flex;gap:1.5rem;list-style:none}
+.fnav a{font-family:var(--mono);font-size:.62rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .3s}
+.fnav a:hover{color:var(--text)}
+.fcopy{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+
+/* WHATSAPP */
+.wa{position:fixed;bottom:2rem;right:2rem;width:52px;height:52px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:200;text-decoration:none;box-shadow:0 4px 22px rgba(37,211,102,.28);transition:transform .3s,box-shadow .3s}
+.wa:hover{transform:scale(1.1);box-shadow:0 6px 30px rgba(37,211,102,.4)}
+.wa svg{width:27px;height:27px;fill:#fff}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");opacity:.22;pointer-events:none;z-index:9990}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .sinner{max-width:70% !important}
+  #about .sinner{grid-template-columns:1fr !important;max-width:68% !important}
+}
+@media(max-width:880px){
+  .sinner{max-width:88% !important;padding:5rem 2.5rem !important}
+  .founders{grid-template-columns:1fr !important}
+  .vals{grid-template-columns:1fr !important}
+  #contact .sinner{grid-template-columns:1fr !important;gap:3rem !important}
+}
+@media(max-width:768px){
+  #globe{width:100vw;right:0;opacity:.25}
+  nav{padding:1.2rem 1.5rem}
+  .nav-links,.nav-cta{display:none}
+  .nav-ham{display:flex}
+  #hero{padding:1.5rem;padding-top:5rem}
+  .hero-inner{max-width:100%}
+  h1.htitle{font-size:2.6rem}
+  .hero-scroll{left:1.5rem}
+  #stats{flex-wrap:wrap}
+  .stat-item{flex:0 0 50%;border-right:none !important;border-bottom:1px solid var(--border);padding:1.5rem}
+  .sinner{padding:4rem 1.5rem !important;max-width:100% !important}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2rem 1.5rem}
+  .fnav{flex-wrap:wrap;justify-content:center}
+  .frow{grid-template-columns:1fr !important}
+  body{cursor:auto}
+  #cr,#cd{display:none}
+  .gbg{background:rgba(6,6,20,.95) !important}
+}
+</style>
+</head>
+<body>
+
+<div id="cr"></div>
+<div id="cd"></div>
+<div id="sb"></div>
+<canvas id="globe"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="logo">Maverick<span class="dot">.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get Started</a>
+  <button class="nav-ham" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div id="mm">
+  <a href="#about"    onclick="closeMenu()">About</a>
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#team"     onclick="closeMenu()">Team</a>
+  <a href="#contact"  onclick="closeMenu()">Contact</a>
+</div>
+
+<main>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-tag" id="ht">Mumbai-Based Digital Agency</div>
+    <h1 class="htitle">
+      <span class="hline" id="hl1">Turn</span>
+      <span class="hline" id="hl2">Attention</span>
+      <span class="hline hl" id="hl3">Into Revenue<span style="color:var(--text)">.</span></span>
+    </h1>
+    <p class="hero-desc" id="hd">We help ambitious brands scale through high-conversion strategy, storytelling, and execution — blending creativity, psychology, and data to drive measurable outcomes.</p>
+    <div class="hero-btns" id="hb">
+      <a href="#contact" class="btn-fill">Start Your Growth</a>
+      <a href="#services" class="btn-ghost">Our Services</a>
+    </div>
+  </div>
+  <div class="hero-scroll" id="hs"><div class="scline"></div>Scroll to explore</div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stat-item rv"><div class="stat-num">40<span class="ac">+</span></div><div class="stat-lbl">Brands Scaled</div></div>
+  <div class="stat-item rv" style="transition-delay:.1s"><div class="stat-num">15<span class="ac">M+</span></div><div class="stat-lbl">Organic Views</div></div>
+  <div class="stat-item rv" style="transition-delay:.2s"><div class="stat-num">200<span class="ac">%+</span></div><div class="stat-lbl">Average ROI</div></div>
+  <div class="stat-item rv" style="transition-delay:.3s"><div class="stat-num"><span class="ac">2X</span></div><div class="stat-lbl">Min. Revenue Growth</div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="gbg">
+  <div class="sinner">
+    <div class="aheadwrap rv">
+      <div class="slabel">About Us</div>
+      <h2 class="sh">A full-stack agency<br>with skin in the game.</h2>
+    </div>
+    <div class="abody rv" style="transition-delay:.1s">
+      <p>Maverick Digitals is a Mumbai-based full-stack digital marketing agency co-founded by Muskan Rathod and Dhaval Shah — bringing together brand strategy and technical innovation under one roof.</p>
+      <p>We're known for blending creativity, psychology, and data to drive measurable business outcomes — not just vanity metrics. We partner with growth-focused businesses across industries, helping any brand build authority and convert attention into revenue.</p>
+      <div class="ameta">
+        <div class="ameta-row"><label>Headquarters</label><span>Mumbai, India</span></div>
+        <div class="ameta-row"><label>Global Reach</label><span>India, UAE, USA, UK, AU</span></div>
+        <div class="ameta-row"><label>Founded</label><span>Maverick Digitals</span></div>
+        <div class="ameta-row"><label>Approach</label><span>Founder-Led, Data-Driven</span></div>
+      </div>
+      <div class="mission" style="margin-top:2rem">
+        <p>To deliver performance-driven digital marketing solutions that combine creativity, technology, and data — helping brands scale profitably and sustainably.</p>
+      </div>
+    </div>
+    <div class="rv" style="transition-delay:.2s">
+      <div class="ind-title">Industries We Serve</div>
+      <div class="tagcloud">
+        <span class="tag">D2C Brands</span>
+        <span class="tag">Healthcare</span>
+        <span class="tag">Travel &amp; Hospitality</span>
+        <span class="tag">Coaches</span>
+        <span class="tag">B2B Startups</span>
+        <span class="tag">Wedding Planners</span>
+        <span class="tag">Consultants</span>
+      </div>
+      <div class="ind-title">What Makes Us Different</div>
+      <div style="display:flex;flex-direction:column;gap:.65rem">
+        <div style="font-size:.82rem;color:var(--muted);padding:.6rem .9rem;border:1px solid var(--border)">Lean, high-output team with end-to-end capability</div>
+        <div style="font-size:.82rem;color:var(--muted);padding:.6rem .9rem;border:1px solid var(--border)">Founder-led approach — direct accountability at every step</div>
+        <div style="font-size:.82rem;color:var(--muted);padding:.6rem .9rem;border:1px solid var(--border)">Generated 15M+ organic views across 40+ brands</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="gbg">
+  <div class="sinner">
+    <div class="rv">
+      <div class="slabel">What We Do</div>
+      <h2 class="sh">End-to-end services<br>built to scale.</h2>
+    </div>
+    <div class="svc-list rv" style="transition-delay:.15s">
+
+      <div class="svc-row">
+        <div class="svc-head" onclick="toggleSvc(this)">
+          <span class="svc-no">01</span>
+          <span class="svc-nm">Personal Branding</span>
+          <span class="svc-arr">→</span>
+        </div>
+        <div class="svc-body">
+          <p class="svc-desc">Strategy, ghostwriting, and content systems for founders and creators who want to build authority and scale their influence.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Brand Strategy</span>
+            <span class="svc-tag">Ghostwriting</span>
+            <span class="svc-tag">Thought Leadership</span>
+            <span class="svc-tag">Social Presence</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-row">
+        <div class="svc-head" onclick="toggleSvc(this)">
+          <span class="svc-no">02</span>
+          <span class="svc-nm">Social Media Management</span>
+          <span class="svc-arr">→</span>
+        </div>
+        <div class="svc-body">
+          <p class="svc-desc">Done-for-you content, community growth, and cross-platform analytics — we handle everything so you can focus on your business.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Content Planning</span>
+            <span class="svc-tag">Community Management</span>
+            <span class="svc-tag">Growth Strategy</span>
+            <span class="svc-tag">Analytics</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-row">
+        <div class="svc-head" onclick="toggleSvc(this)">
+          <span class="svc-no">03</span>
+          <span class="svc-nm">Website &amp; App Development</span>
+          <span class="svc-arr">→</span>
+        </div>
+        <div class="svc-body">
+          <p class="svc-desc">High-performance sites, e-commerce solutions, and custom web applications built for conversion and speed.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Custom Web Dev</span>
+            <span class="svc-tag">E-commerce</span>
+            <span class="svc-tag">Mobile Apps</span>
+            <span class="svc-tag">Performance Optimization</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-row">
+        <div class="svc-head" onclick="toggleSvc(this)">
+          <span class="svc-no">04</span>
+          <span class="svc-nm">SEO &amp; SEM</span>
+          <span class="svc-arr">→</span>
+        </div>
+        <div class="svc-body">
+          <p class="svc-desc">Keyword strategy, technical optimization, Google Ads management, and inbound lead engines that compound over time.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Technical SEO</span>
+            <span class="svc-tag">Keyword Research</span>
+            <span class="svc-tag">Google Ads</span>
+            <span class="svc-tag">Local SEO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-row">
+        <div class="svc-head" onclick="toggleSvc(this)">
+          <span class="svc-no">05</span>
+          <span class="svc-nm">Performance Marketing</span>
+          <span class="svc-arr">→</span>
+        </div>
+        <div class="svc-body">
+          <p class="svc-desc">ROI-first Meta and Google campaigns with funnel-driven execution and rigorous conversion tracking across every touchpoint.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Meta Ads</span>
+            <span class="svc-tag">Google Campaigns</span>
+            <span class="svc-tag">Conversion Optimization</span>
+            <span class="svc-tag">ROI Tracking</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-row">
+        <div class="svc-head" onclick="toggleSvc(this)">
+          <span class="svc-no">06</span>
+          <span class="svc-nm">Branding &amp; Strategy</span>
+          <span class="svc-arr">→</span>
+        </div>
+        <div class="svc-body">
+          <p class="svc-desc">Identity, messaging frameworks, GTM launches, and positioning that makes your brand impossible to ignore in a crowded market.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Brand Identity</span>
+            <span class="svc-tag">Messaging</span>
+            <span class="svc-tag">GTM Strategy</span>
+            <span class="svc-tag">Brand Guidelines</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" class="gbg">
+  <div class="sinner">
+    <div class="rv">
+      <div class="slabel">The Founders</div>
+      <h2 class="sh">The people<br>behind the work.</h2>
+    </div>
+    <div class="founders rv" style="transition-delay:.15s">
+      <div class="founder">
+        <div class="founder-img-wrap">
+          <img class="founder-img" src="https://www.maverickdigitals.co.in/_next/image?url=%2Fimages%2Fmuskan3.jpg&w=256&q=75" alt="Muskan Rathod">
+        </div>
+        <div class="founder-info">
+          <div class="founder-name">Muskan Rathod</div>
+          <div class="founder-role">Founder</div>
+          <div class="founder-bio">Brand strategist and growth marketer with expertise in storytelling, personal branding, and scaling businesses through digital-first positioning.</div>
+          <div class="chips">
+            <span class="chip">Brand Strategy</span>
+            <span class="chip">Growth Marketing</span>
+            <span class="chip">Storytelling</span>
+            <span class="chip">Personal Branding</span>
+          </div>
+        </div>
+      </div>
+      <div class="founder">
+        <div class="founder-img-wrap">
+          <img class="founder-img" src="https://www.maverickdigitals.co.in/_next/image?url=%2Fimages%2Fdhaval.jpg&w=256&q=75" alt="Dhaval Shah">
+        </div>
+        <div class="founder-info">
+          <div class="founder-name">Dhaval Shah</div>
+          <div class="founder-role">Co-Founder</div>
+          <div class="founder-bio">Tech innovator with 5+ years building scalable web and app platforms, specializing in conversion-optimized digital experiences and MERN stack.</div>
+          <div class="chips">
+            <span class="chip">Web Development</span>
+            <span class="chip">App Development</span>
+            <span class="chip">MERN Stack</span>
+            <span class="chip">Platform Optimization</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv" style="transition-delay:.25s">
+      <div class="vals-title">Our Values</div>
+      <div class="vals">
+        <div class="val"><h4>Performance-Driven</h4><p>We focus on measurable outcomes, not vanity metrics. Every strategy is designed to deliver real business results.</p></div>
+        <div class="val"><h4>Data-Informed Creativity</h4><p>Creative storytelling fused with data insights — campaigns that both resonate and convert.</p></div>
+        <div class="val"><h4>Founder-Led Approach</h4><p>Our founders are directly involved in every project, ensuring quality and accountability at every step.</p></div>
+        <div class="val"><h4>End-to-End Capability</h4><p>From strategy to execution, we handle everything in-house with our lean, high-output team.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sinner">
+    <div class="ctop rv">
+      <div class="slabel">Let's Talk</div>
+      <h2 class="sh">Ready to turn<br>attention into revenue?</h2>
+    </div>
+    <div class="rv" style="transition-delay:.1s">
+      <p class="cdesc">Book your strategy consultation and unlock a tailored growth roadmap for your brand.</p>
+      <div class="clinks">
+        <a href="mailto:maverickdigitals18@gmail.com">maverickdigitals18@gmail.com</a>
+        <a href="#">Mumbai, Maharashtra, India</a>
+        <a href="https://wa.me/+918779799255">+91 87797 99255 (WhatsApp)</a>
+      </div>
+      <div class="socials">
+        <a href="https://www.instagram.com/maverickdigitalsagency/" target="_blank" class="soc-btn">Instagram</a>
+        <a href="https://www.linkedin.com/company/maverick-digitals/" target="_blank" class="soc-btn">LinkedIn</a>
+      </div>
+    </div>
+    <div class="rv" style="transition-delay:.2s">
+      <form class="cform" onsubmit="handleForm(event)">
+        <div class="frow">
+          <div class="fgrp"><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+          <div class="fgrp"><label>Email</label><input type="email" placeholder="you@company.com" required></div>
+        </div>
+        <div class="frow">
+          <div class="fgrp"><label>Phone</label><input type="tel" placeholder="+91 00000 00000"></div>
+          <div class="fgrp"><label>Company</label><input type="text" placeholder="Company name"></div>
+        </div>
+        <div class="fgrp">
+          <label>Service</label>
+          <select>
+            <option value="">Select a service</option>
+            <option>Personal Branding</option>
+            <option>Social Media Management</option>
+            <option>Website &amp; App Development</option>
+            <option>SEO &amp; SEM</option>
+            <option>Performance Marketing</option>
+            <option>Branding &amp; Strategy</option>
+          </select>
+        </div>
+        <div class="fgrp"><label>Tell us about your project</label><textarea placeholder="What are you looking to achieve?" required></textarea></div>
+        <button type="submit" class="fsub">Send Message</button>
+        <div class="form-msg" id="fmsg">Message sent — we'll be in touch shortly.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">Maverick<span class="dot">.</span></div>
+  <ul class="fnav">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://www.instagram.com/maverickdigitalsagency/" target="_blank">Instagram</a></li>
+    <li><a href="https://www.linkedin.com/company/maverick-digitals/" target="_blank">LinkedIn</a></li>
+  </ul>
+  <div class="fcopy">© 2025 Maverick Digitals. All rights reserved.</div>
+</footer>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/+918779799255?text=Hi%20Maverick%20Digitals,%20I%20am%20interested%20in%20your%20service" target="_blank" class="wa" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+/* ══════════════════════════════════════════════════
+   GLOBE — scroll-driven WebGL sphere
+══════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('globe');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if(!gl) return;
+
+  function resize(){
+    canvas.width  = canvas.offsetWidth  * devicePixelRatio;
+    canvas.height = canvas.offsetHeight * devicePixelRatio;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* shaders */
+  const vert = `
+    attribute vec3 aPos;
+    attribute vec2 aUV;
+    uniform mat4 uMVP;
+    varying vec2 vUV;
+    varying float vDepth;
+    void main(){
+      vUV = aUV;
+      vec4 p = uMVP * vec4(aPos,1.0);
+      vDepth = p.z;
+      gl_Position = p;
+    }
+  `;
+  const frag = `
+precision mediump float;
+
+varying vec2 vUV;
+varying float vDepth;
+
+uniform sampler2D uEarth;
+uniform float uTime;
+
+void main(){
+  vec2 uv = vUV;
+
+  // Base Earth texture
+  vec3 color = texture2D(uEarth, uv).rgb;
+
+  // simple lighting
+  vec3 lightDir = normalize(vec3(0.5, 0.8, 0.6));
+  vec2 p = uv * 2.0 - 1.0;
+  float z = sqrt(1.0 - dot(p,p));
+  vec3 normal = normalize(vec3(p, z));
+
+  float light = dot(normal, lightDir);
+  light = clamp(light, 0.2, 1.0);
+
+  color *= light;
+
+  // atmosphere glow
+  float rim = 1.0 - abs(vDepth)*0.6;
+  rim = pow(clamp(rim,0.0,1.0), 3.0);
+  color += vec3(0.2,0.4,1.0) * rim * 0.4;
+
+  float alpha = smoothstep(-0.6, 0.0, vDepth);
+
+  gl_FragColor = vec4(color, alpha);
+}
+`;
+
+  function makeShader(type, src){
+    const s = gl.createShader(type);
+    gl.shaderSource(s,src); gl.compileShader(s); return s;
+  }
+const prog = gl.createProgram();
+gl.attachShader(prog, makeShader(gl.VERTEX_SHADER, vert));
+gl.attachShader(prog, makeShader(gl.FRAGMENT_SHADER, frag));
+gl.linkProgram(prog); 
+gl.useProgram(prog);
+
+/* ✅ ADD THIS PART RIGHT HERE */
+const earthTexture = gl.createTexture();
+const earthImg = new Image();
+earthImg.crossOrigin = "anonymous";
+earthImg.src = "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg";
+
+earthImg.onload = () => {
+  gl.bindTexture(gl.TEXTURE_2D, earthTexture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, earthImg);
+
+  /* ADD THESE 👇 */
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+  gl.generateMipmap(gl.TEXTURE_2D);
+};
+
+  /* sphere geometry */
+  const SEGS = 80;
+  const pos=[], uvs=[], idx=[];
+  for(let j=0;j<=SEGS;j++){
+    for(let i=0;i<=SEGS;i++){
+      const u=i/SEGS, v=j/SEGS;
+      const th=u*Math.PI*2, ph=v*Math.PI;
+      pos.push(Math.sin(ph)*Math.cos(th), Math.cos(ph), Math.sin(ph)*Math.sin(th));
+      uvs.push(u,v);
+    }
+  }
+  for(let j=0;j<SEGS;j++){
+    for(let i=0;i<SEGS;i++){
+      const a=j*(SEGS+1)+i;
+      idx.push(a,a+1,a+SEGS+1, a+1,a+SEGS+2,a+SEGS+1);
+    }
+  }
+
+  function buf(data, type){ const b=gl.createBuffer(); gl.bindBuffer(type||gl.ARRAY_BUFFER,b); gl.bufferData(type||gl.ARRAY_BUFFER,data,gl.STATIC_DRAW); return b; }
+  const bPos = buf(new Float32Array(pos));
+  const bUV  = buf(new Float32Array(uvs));
+  const bIdx = buf(new Uint16Array(idx), gl.ELEMENT_ARRAY_BUFFER);
+
+  function attr(name,buf,sz){ const l=gl.getAttribLocation(prog,name); gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l,sz,gl.FLOAT,false,0,0); }
+
+  const uMVP  = gl.getUniformLocation(prog,'uMVP');
+  const uTime = gl.getUniformLocation(prog,'uTime');
+  const uEarth = gl.getUniformLocation(prog,'uEarth');
+
+  /* matrix helpers */
+  function mat4(){ return new Float32Array(16); }
+  function identity(m){ for(let i=0;i<16;i++) m[i]=i%5===0?1:0; return m; }
+  function perspective(m,fov,asp,near,far){
+    const f=1/Math.tan(fov/2), r=1/(near-far);
+    m[0]=f/asp;m[1]=m[2]=m[3]=0;
+    m[4]=0;m[5]=f;m[6]=m[7]=0;
+    m[8]=m[9]=0;m[10]=(far+near)*r;m[11]=-1;
+    m[12]=m[13]=0;m[14]=2*far*near*r;m[15]=0;
+    return m;
+  }
+  function rotY(m,a){ const c=Math.cos(a),s=Math.sin(a); const tmp=new Float32Array(m); m[0]=tmp[0]*c+tmp[8]*s; m[2]=-tmp[0]*s+tmp[8]*c; m[4]=tmp[4]*c+tmp[12]*s; m[6]=-tmp[4]*s+tmp[12]*c; m[8]=tmp[8]*c; m[10]=tmp[8]*s; return m; }
+  function rotX(m,a){ const c=Math.cos(a),s=Math.sin(a); const tmp=new Float32Array(m); m[1]=tmp[1]*c-tmp[9]*s; m[2]=tmp[1]*s+tmp[9]*c; m[5]=tmp[5]*c-tmp[13]*s; m[6]=tmp[5]*s+tmp[13]*c; m[9]=-tmp[9]*c; return m; }
+  function translate(m,x,y,z){ m[12]+=m[0]*x+m[4]*y+m[8]*z; m[13]+=m[1]*x+m[5]*y+m[9]*z; m[14]+=m[2]*x+m[6]*y+m[10]*z; return m; }
+  function multiply(a,b){
+    const r=mat4();
+    for(let i=0;i<4;i++) for(let j=0;j<4;j++) for(let k=0;k<4;k++) r[j*4+i]+=a[k*4+i]*b[j*4+k];
+    return r;
+  }
+
+  /* scroll tracking */
+  let scrollY = 0;
+  let targetScroll = 0;
+  window.addEventListener('scroll', ()=>{ targetScroll = window.scrollY; });
+
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  let startTime = performance.now();
+  let prevScroll = 0;
+
+  function frame(now){
+    requestAnimationFrame(frame);
+    const t = (now - startTime) * 0.001;
+
+    /* smooth scroll */
+    scrollY += (targetScroll - scrollY) * 0.06;
+
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const prog0 = docH > 0 ? scrollY / docH : 0;
+
+    /* rotation driven entirely by scroll progress */
+    const rotationY = prog0 * Math.PI * 6;   /* 3 full spins over page */
+    const rotationX = prog0 * Math.PI * 0.8; /* slight tilt */
+
+    /* size & position — globe gets smaller as you go deeper into page */
+    const scaleBase = 1.0 - prog0 * 0.15;
+
+    const asp = canvas.width / canvas.height;
+    const proj = perspective(mat4(), 0.88, asp, 0.1, 100);
+    let mv = identity(mat4());
+    translate(mv, 0.32, 0.05 - prog0 * 0.1, -2.8);
+
+    /* apply scroll-driven rotation */
+    const rx = mat4(); identity(rx);
+    const ry = mat4(); identity(ry);
+    const cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
+    const cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
+    rx[5]=cosX; rx[6]=sinX; rx[9]=-sinX; rx[10]=cosX;
+    ry[0]=cosY; ry[2]=-sinY; ry[8]=sinY; ry[10]=cosY;
+
+    /* scale */
+    const sc = mat4(); identity(sc);
+    sc[0]=sc[5]=sc[10]=scaleBase;
+
+    const mvp = multiply(proj, multiply(mv, multiply(ry, multiply(rx, sc))));
+
+    gl.clearColor(0,0,0,0);
+    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
+    attr('aPos', bPos, 3);
+    attr('aUV',  bUV,  2);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bIdx);
+    gl.uniformMatrix4fv(uMVP, false, mvp);
+    gl.uniform1f(uTime, t);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, earthTexture);
+    gl.uniform1i(uEarth, 0);
+    gl.drawElements(gl.TRIANGLES, idx.length, gl.UNSIGNED_SHORT, 0);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ══════════════════════════════════════════════════
+   CURSOR
+══════════════════════════════════════════════════ */
+const cr = document.getElementById('cr');
+const cd = document.getElementById('cd');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; cd.style.left=mx+'px'; cd.style.top=my+'px'; });
+(function moveCursor(){
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  cr.style.left=rx+'px'; cr.style.top=ry+'px';
+  requestAnimationFrame(moveCursor);
+})();
+document.querySelectorAll('a,button,.svc-head,.tag').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('link-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('link-hover'));
+});
+
+/* ══════════════════════════════════════════════════
+   SCROLL PROGRESS BAR
+══════════════════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  const pct = window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  document.getElementById('sb').style.width = pct+'%';
+});
+
+/* ══════════════════════════════════════════════════
+   REVEAL ON SCROLL
+══════════════════════════════════════════════════ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+}, {threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ══════════════════════════════════════════════════
+   HERO ENTRANCE
+══════════════════════════════════════════════════ */
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('ht').classList.add('vis'),200);
+  setTimeout(()=>document.getElementById('hl1').classList.add('vis'),380);
+  setTimeout(()=>document.getElementById('hl2').classList.add('vis'),500);
+  setTimeout(()=>document.getElementById('hl3').classList.add('vis'),640);
+  setTimeout(()=>document.getElementById('hd').classList.add('vis'),780);
+  setTimeout(()=>document.getElementById('hb').classList.add('vis'),920);
+  setTimeout(()=>document.getElementById('hs').classList.add('vis'),1100);
+});
+
+/* ══════════════════════════════════════════════════
+   SERVICES ACCORDION
+══════════════════════════════════════════════════ */
+function toggleSvc(head){
+  const row = head.parentElement;
+  const wasOpen = row.classList.contains('open');
+  document.querySelectorAll('.svc-row.open').forEach(r=>r.classList.remove('open'));
+  if(!wasOpen) row.classList.add('open');
+}
+
+/* ══════════════════════════════════════════════════
+   MOBILE MENU
+══════════════════════════════════════════════════ */
+function closeMenu(){
+  document.getElementById('mm').classList.remove('open');
+  document.getElementById('ham').classList.remove('open');
+}
+document.getElementById('ham').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mm').classList.toggle('open');
+});
+
+/* ══════════════════════════════════════════════════
+   FORM
+══════════════════════════════════════════════════ */
+function handleForm(e){
+  e.preventDefault();
+  const msg = document.getElementById('fmsg');
+  msg.style.display = 'block';
+  e.target.reset();
+  setTimeout(()=>{ msg.style.display='none'; },5000);
+}
+</script>
+</body>
+</html>
